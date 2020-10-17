@@ -14,6 +14,20 @@ this is all made up
  and pretend these next two hours never happened."
 >
 > *–* junlinmo
+----
+> mysterious, unknown  
+> it's a vibe
+>
+> *–* abifox, regarding "joe who"
+----
+> who has the xxx-xxx-xxxx number?  
+> *–* elanor
+> 
+> It is I, your conscience  
+> *–* your conscience
+>
+> Hi your conscience  
+> *–* elanor
 
 ### figments
 
@@ -54,8 +68,51 @@ the instructions that can be used inside figments are
  of `h`s in the instruction)
 - `uGH...H`: channels the inner frustration of Nonexistence into the first register (sets the first register to
  negative the number of `H`s in the instruction)
+- `h, hh, hhh, ...`: warp locations created by the interaction of Reality and Nonexistence. each warp location allows
+ program execution to jump forward to the nearest corresponding warp location. progam execution cannot jump back, as
+  this can cause a break in the Nonexistence continuum, overloading Reality with things we just don't want to worry
+   about
+- `joe who`, `your conscience`: copies the values of the two specified registers to the memory of `joe who` or `your
+ conscience`. the location of either of these objects is uncertain, but many speculate that they inhabit the border
+  between Reality and Nonexistence. all we know is that we can store and retrieve information at will
+- `whos joe`, `whos conscience?`: takes the values from either `joe who` or `your conscience`, storing them back into
+ the specified registers
 
 ### using instructions
 Every valid program starts with the line `i'm Coding!`.
 
 **loading figment instructions:**
+
+every figment has a portal to reality, allowing access to its contents without bringing it into Reality. when a new
+ figment is created, this portal starts in the upper left corner of the Table of Nonexistence, corresponding to
+  register 0, register 0.
+  
+by adding a command into the flow of Reality, it will go through the portal, adding itself to the Table of
+ Nonexistence. however, the portal has its own weaknesses. if it is sent the command `i.e.`, it will abandon its spot
+ , and move to the right one cell. if the portal is already on the right edge, it will appear to wrap around to the
+  left edge, although the true mechanism of this behavior is unknown. if it is sent the command `e.g.`, it will
+   abandon its spot, and move downwards one cell. again, if it is at the bottom edge, it will appear to wrap around
+    to the top edge
+
+**commands of Reality**
+
+not all commands will alter a figment. as mentioned before, the commands `bruh` and `b r u h` will bring figments
+ into Reality. the command `what wait why where when how` is used to get the reality value of a figment after it is
+  run. running the command `seems fake but ok?` will jump to the corresponding `elsewise` if the reality value of 0
+   (fake). if we run a `seems fake but ok?` instruction and we run into its corresponding `elsewise`, we jump to the
+    next `progress!!` instruction. the corresponding `elsewise` makes sure that nested `seems fake but ok
+    ?` statements will work. for example,
+    
+    what wait why where when how
+    seems fake but ok? (1)
+    ...
+    seems fake but ok? (2)
+    ...
+    elsewise (2)
+    ...
+    progress!! (2)
+    elsewise (1)
+    ...
+    progress!! (1)
+    
+the `(1)` and `(2)` denote which instructions are part of the same group 
