@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <title>this is all made up</title>
+</head>
+<body>
+<div>
+    <div class="container">
+        <h1 class="display-3">this is all made up</h1>
+        <b>a programming language by danlliu</b>
+        <hr/>
+        <p class="lead">special thanks Goes to abifox, junlinmo, joericha, elanor, warussel, alptekin</p>
+    </div>
+    <div class="container-fluid">
+        <!-- Main IDE area -->
+        <div class="row">
+            <div class="col-4">
+                <!-- Text entry -->
+                <div class="row no-gutters">
+                    <div class="col-1">
+                        <p id="line-numbers" class="text-right mr-1" style="margin-top: 3px; font-family: monospace;
+                        max-height: 576px; overflow-y: hidden">
+                            1</p>
+                    </div>
+                    <div class="col-11">
+                        <textarea id="code" rows="30" class="w-100" style="font-family: monospace"
+                                  oninput="codechange()"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="container">
+                    <table class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">x0</th>
+                            <th scope="col">x1</th>
+                            <th scope="col">x2</th>
+                            <th scope="col">x3</th>
+                            <th scope="col">x4</th>
+                            <th scope="col">x5</th>
+                            <th scope="col">x6</th>
+                            <th scope="col">x7</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th scope="row">x0</th>
+                            <td id="tb00">&gt;:(</td>
+                            <td id="tb01">&gt;:(</td>
+                            <td id="tb02">&gt;:(</td>
+                            <td id="tb03">&gt;:(</td>
+                            <td id="tb04">&gt;:(</td>
+                            <td id="tb05">&gt;:(</td>
+                            <td id="tb06">&gt;:(</td>
+                            <td id="tb07">&gt;:(</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">x1</th>
+                            <td id="tb10">&gt;:(</td>
+                            <td id="tb11">&gt;:(</td>
+                            <td id="tb12">&gt;:(</td>
+                            <td id="tb13">&gt;:(</td>
+                            <td id="tb14">&gt;:(</td>
+                            <td id="tb15">&gt;:(</td>
+                            <td id="tb16">&gt;:(</td>
+                            <td id="tb17">&gt;:(</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">x2</th>
+                            <td id="tb20">&gt;:(</td>
+                            <td id="tb21">&gt;:(</td>
+                            <td id="tb22">&gt;:(</td>
+                            <td id="tb23">&gt;:(</td>
+                            <td id="tb24">&gt;:(</td>
+                            <td id="tb25">&gt;:(</td>
+                            <td id="tb26">&gt;:(</td>
+                            <td id="tb27">&gt;:(</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">x3</th>
+                            <td id="tb30">&gt;:(</td>
+                            <td id="tb31">&gt;:(</td>
+                            <td id="tb32">&gt;:(</td>
+                            <td id="tb33">&gt;:(</td>
+                            <td id="tb34">&gt;:(</td>
+                            <td id="tb35">&gt;:(</td>
+                            <td id="tb36">&gt;:(</td>
+                            <td id="tb37">&gt;:(</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">x4</th>
+                            <td id="tb40">&gt;:(</td>
+                            <td id="tb41">&gt;:(</td>
+                            <td id="tb42">&gt;:(</td>
+                            <td id="tb43">&gt;:(</td>
+                            <td id="tb44">&gt;:(</td>
+                            <td id="tb45">&gt;:(</td>
+                            <td id="tb46">&gt;:(</td>
+                            <td id="tb47">&gt;:(</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">x5</th>
+                            <td id="tb50">&gt;:(</td>
+                            <td id="tb51">&gt;:(</td>
+                            <td id="tb52">&gt;:(</td>
+                            <td id="tb53">&gt;:(</td>
+                            <td id="tb54">&gt;:(</td>
+                            <td id="tb55">&gt;:(</td>
+                            <td id="tb56">&gt;:(</td>
+                            <td id="tb57">&gt;:(</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">x6</th>
+                            <td id="tb60">&gt;:(</td>
+                            <td id="tb61">&gt;:(</td>
+                            <td id="tb62">&gt;:(</td>
+                            <td id="tb63">&gt;:(</td>
+                            <td id="tb64">&gt;:(</td>
+                            <td id="tb65">&gt;:(</td>
+                            <td id="tb66">&gt;:(</td>
+                            <td id="tb67">&gt;:(</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">x7</th>
+                            <td id="tb70">&gt;:(</td>
+                            <td id="tb71">&gt;:(</td>
+                            <td id="tb72">&gt;:(</td>
+                            <td id="tb73">&gt;:(</td>
+                            <td id="tb74">&gt;:(</td>
+                            <td id="tb75">&gt;:(</td>
+                            <td id="tb76">&gt;:(</td>
+                            <td id="tb77">&gt;:(</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+<script src="main.js"></script>
+</body>
+</html>
