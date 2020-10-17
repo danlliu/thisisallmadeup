@@ -2,6 +2,11 @@
 let code_input = $('#code');
 let line_nums = $('#line-numbers');
 
+let compile_button = $('#compile-btn');
+let step_button = $('#step-btn');
+let next_figment_button = $('#next-fig-btn');
+let run_button = $('#run-btn');
+
 function newFigment() {
     let figment = new Array(8);
     for (let i of Array(8).keys()) {
@@ -41,3 +46,13 @@ code_input.on('scroll', function () {
 line_nums.on('scroll', function () {
     code_input.scrollTop($(this).scrollTop());
 });
+
+// -----------
+//  COMPILING
+// -----------
+
+function compile() {
+    let madeupcode = code_input.val();
+    let linesofcode = madeupcode.split('\n');
+
+}

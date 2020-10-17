@@ -77,6 +77,7 @@ the instructions that can be used inside figments are
   between Reality and Nonexistence. all we know is that we can store and retrieve information at will
 - `whos joe`, `whos conscience?`: takes the values from either `joe who` or `your conscience`, storing them back into
  the specified registers
+- `>:(`: expresses anger, but does nothing (noop)
 
 ### using instructions
 Every valid program starts with the line `i'm Coding!`.
