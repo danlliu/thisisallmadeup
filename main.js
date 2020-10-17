@@ -2,6 +2,28 @@
 let code_input = $('#code');
 let line_nums = $('#line-numbers');
 
+function newFigment() {
+    let figment = new Array(8);
+    for (let i of Array(8).keys()) {
+        figment[i] = new Array(8);
+        for (let j of Array(8).keys()) {
+            figment[i][j] = ">:(";
+        }
+    }
+    return figment;
+}
+
+let current_figment = newFigment();
+
+function loadFigment() {
+    for (let i of Array(8).keys()) {
+        for (let j of Array(8).keys()) {
+            document.querySelector(`#tb${i}${j}`).innerHTML = current_figment[i][j];
+        }
+    }
+}
+
+loadFigment();
 
 function codechange() {
     console.log('change');
