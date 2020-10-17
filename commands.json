@@ -61,5 +61,8 @@
   },
   {
     "command": "progress!!"
+  },
+  {
+    "error": "ERROR"
   }
 ]

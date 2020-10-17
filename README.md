@@ -117,3 +117,5 @@ not all commands will alter a figment. as mentioned before, the commands `bruh` 
     progress!! (1)
     
 the `(1)` and `(2)` denote which instructions are part of the same group 
+
+a comment is declared using the syntax `lol {comment}`.

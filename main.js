@@ -1,11 +1,13 @@
 
-let code_input = $('#code');
+let code_input = $('textarea#code');
 let line_nums = $('#line-numbers');
 
-let compile_button = $('#compile-btn');
-let step_button = $('#step-btn');
-let next_figment_button = $('#next-fig-btn');
-let run_button = $('#run-btn');
+let compile_button = document.querySelector('#compile-btn');
+let step_button = document.querySelector('#step-btn');
+let next_figment_button = document.querySelector('#next-fig-btn');
+let run_button = document.querySelector('#run-btn');
+
+let errors = document.querySelector('#errors');
 
 function newFigment() {
     let figment = new Array(8);
@@ -51,8 +53,85 @@ line_nums.on('scroll', function () {
 //  COMPILING
 // -----------
 
+let instructions;
+
+$.getJSON("./commands.json", (json) => {instructions = json;});
+
+let code = null;
+let correspond = Array(0);
+
+function compile_code() {
+    code = code_input.val().split('\n');
+    code.forEach((v, i, a) => (a[i] = v.trim()));
+    let line_num = 1;
+
+    correspond = Array(code.length);
+    let conditionals = Array(0);
+
+    for (let line of code) {
+        console.log(line);
+        console.log(line_num);
+        line = line.trim();
+        if (line_num === 1) {
+            if (line !== "i'm Coding!") {
+                throw SyntaxError(`first line must be "i'm Coding!"`);
+            }
+            ++line_num;
+            continue;
+        }
+        if (line.match(/^lol/)) {
+            ++line_num;
+            continue;
+        }
+        for (let instr of instructions) {
+            if (instr.error === "ERROR") {
+                throw SyntaxError(`syntax error at line ${line_num}: ${line}`);
+            }
+            if (instr.command === "ugh") {
+                if (line.match(/ugh+/)) {
+                    break;
+                }
+            }
+            else if (instr.command === "uGH") {
+                if (line.match(/uGH+/)) {
+                    break;
+                }
+            }
+            else if (instr.command === "seems fake but ok?") {
+
+            }
+        }
+        ++line_num;
+    }
+}
+
+let edit_mode = true;
+
 function compile() {
-    let madeupcode = code_input.val();
-    let linesofcode = madeupcode.split('\n');
+    if (edit_mode) {
+        try {
+            compile_code();
+            errors.innerHTML = `<p style="color: green; font-weight: bold">the code Compiles!</p><hr/>`;
+            document.querySelector('#code').toggleAttribute("readonly", true);
+            step_button.removeAttribute("disabled");
+            next_figment_button.removeAttribute("disabled");
+            run_button.removeAttribute("disabled");
+            edit_mode = false;
+            compile_button.innerHTML = "edit code";
+        } catch (e) {
+            errors.innerHTML = `<p style="color: red">error: ${e.message}</p>`;
+        }
+    } else {
+        edit_mode = true;
+        compile_button.innerHTML = "compile";
+        errors.innerHTML = "";
+        document.querySelector('#code').removeAttribute("readonly");
+        step_button.toggleAttribute("disabled", true);
+        next_figment_button.toggleAttribute("disabled", true);
+        run_button.toggleAttribute("disabled", true);
+    }
+}
+
+function step() {
 
 }
