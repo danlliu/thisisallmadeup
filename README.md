@@ -10,7 +10,10 @@ this is all made up
 
 *acknowledgements*
 
-why Press shift when you Can Write lowercase?
+> I preface my labs on recursion with "I hate recursion. You probably hate recursion. Let's just take a deep breath
+ and pretend these next two hours never happened."
+>
+> *–* junlinmo
 
 ### figments
 
