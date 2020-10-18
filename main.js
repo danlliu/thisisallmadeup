@@ -55,10 +55,24 @@ line_nums.on('scroll', function () {
 
 let instructions;
 
-$.getJSON("./commands.json", (json) => {instructions = json;});
+$.getJSON("./commands.json", (json) => {instructions = json["commands"];});
 
 let code = null;
 let correspond = Array(0);
+let registers = [0,0,0,0,0,0,0,0];
+let doubleregisters = [[0,0], [0,0]];
+let reality = 0;
+
+function loadRegisters() {
+    for (let i of registers.keys()) {
+        document.querySelector(`x${i}_val`).innerHTML = `${registers[i]}`;
+    }
+    document.querySelector('joe-who_val1').innerHTML = `${doubleregisters[0][0]}`;
+    document.querySelector('joe-who_val2').innerHTML = `${doubleregisters[0][1]}`;
+    document.querySelector('yc_val1').innerHTML = `${doubleregisters[1][0]}`;
+    document.querySelector('yc_val2').innerHTML = `${doubleregisters[1][1]}`;
+    document.querySelector('reality_val').innerHTML = `${reality}`;
+}
 
 function compile_code() {
     code = code_input.val().split('\n');
@@ -98,7 +112,29 @@ function compile_code() {
                 }
             }
             else if (instr.command === "seems fake but ok?") {
-
+                conditionals.push({"line_num": line_num - 1, "elsewise": false, "progress": false});
+                correspond[line_num - 1] = {};
+            }
+            else if (instr.command === "elsewise") {
+                if (conditionals.length === 0) {
+                    throw SyntaxError("can't have elsewise without seems fake but ok?");
+                }
+                if (conditionals[conditionals.length - 1]["elsewise"]) {
+                    throw SyntaxError("seems fake but ok? cannot have two elsewises");
+                }
+                conditionals[conditionals.length - 1]["elsewise"] = true;
+                correspond[conditionals[conditionals.length - 1]["line_num"]]["elsewise"] = line_num - 1;
+                correspond[line_num - 1] = {};
+            } else if (instr.command === "progress") {
+                if (conditionals.length === 0) {
+                    throw SyntaxError("can't have progress!! without seems fake but ok?");
+                }
+                if (conditionals[conditionals.length - 1]["progress"]) {
+                    throw SyntaxError("seems fake but ok? cannot have two progress!!");
+                }
+                correspond[correspond[conditionals[conditionals.length - 1]["line_num"]]["elsewise"]]["progress"] = line_num - 1;
+                correspond[conditionals[conditionals.length - 1]["line_num"]]["progress"] = line_num - 1;
+                conditionals.pop();
             }
         }
         ++line_num;
@@ -122,6 +158,7 @@ function compile() {
             errors.innerHTML = `<p style="color: red">error: ${e.message}</p>`;
         }
     } else {
+        running_line = 0;
         edit_mode = true;
         compile_button.innerHTML = "compile";
         errors.innerHTML = "";
@@ -132,6 +169,29 @@ function compile() {
     }
 }
 
+let running_line = 0;
+let portal_location = [0,0];
+
 function step() {
 
+    let current_line = code[running_line];
+
+    switch (current_line) {
+        case "bruh":
+        case "b r u h":
+        case "i.e.":
+        case "e.g.":
+        case "seems fake but ok?":
+        case "elsewise":
+        case "progress!!":
+        default:
+            if (current_line.match(/^lol/)) {
+                break;
+            }
+            current_figment[portal_location[0]][portal_location[1]] = current_line;
+    }
+
+    ++running_line;
+    loadFigment();
+    loadRegisters();
 }

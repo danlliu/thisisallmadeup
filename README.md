@@ -77,6 +77,11 @@ the instructions that can be used inside figments are
   between Reality and Nonexistence. all we know is that we can store and retrieve information at will
 - `whos joe`, `whos conscience?`: takes the values from either `joe who` or `your conscience`, storing them back into
  the specified registers
+- `wait i need to remember this`: stores the value in the first register to a memory address defined by the second
+ register. if the second register's value is negative, the value of the first register is discarded
+- `what have i said that's so usable`: loads from the memory address corresponding to the value of the second
+ register to the first register. if the second register has a negative value, the first register is set to a random
+  integer between 0 and 1047
 - `>:(`: expresses anger, but does nothing (noop)
 
 ### using instructions

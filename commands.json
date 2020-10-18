@@ -1,68 +1,76 @@
-[
-  {
-    "command": "joe who"
-  },
-  {
-    "command": "whos joe"
-  },
-  {
-    "command": "your conscience"
-  },
-  {
-    "command": "whos conscience"
-  },
-  {
-    "command": "what wait why where when how"
-  },
-  {
-    "command": "nO"
-  },
-  {
-    "command": "bruh"
-  },
-  {
-    "command": "b r u h"
-  },
-  {
-    "command": "i'm Learning"
-  },
-  {
-    "command": "i'm Struggling"
-  },
-  {
-    "command": "i'm DONE"
-  },
-  {
-    "command": "someone send help"
-  },
-  {
-    "command": "ugh"
-  },
-  {
-    "command": "uGH"
-  },
-  {
-    "command": "h"
-  },
-  {
-    "command": ">:("
-  },
-  {
-    "command": "i.e."
-  },
-  {
-    "command": "e.g."
-  },
-  {
-    "command": "seems fake but ok?"
-  },
-  {
-    "command": "elsewise"
-  },
-  {
-    "command": "progress!!"
-  },
-  {
-    "error": "ERROR"
-  }
-]
+{
+  "commands": [
+    {
+      "command": "joe who"
+    },
+    {
+      "command": "whos joe"
+    },
+    {
+      "command": "your conscience"
+    },
+    {
+      "command": "whos conscience"
+    },
+    {
+      "command": "what wait why where when how"
+    },
+    {
+      "command": "nO"
+    },
+    {
+      "command": "bruh"
+    },
+    {
+      "command": "b r u h"
+    },
+    {
+      "command": "i'm Learning"
+    },
+    {
+      "command": "i'm Struggling"
+    },
+    {
+      "command": "i'm DONE"
+    },
+    {
+      "command": "someone send help"
+    },
+    {
+      "command": "ugh"
+    },
+    {
+      "command": "uGH"
+    },
+    {
+      "command": "h"
+    },
+    {
+      "command": ">:("
+    },
+    {
+      "command": "wait i need to remember this"
+    },
+    {
+      "command": "what have i said that's so usable"
+    },
+    {
+      "command": "i.e."
+    },
+    {
+      "command": "e.g."
+    },
+    {
+      "command": "seems fake but ok?"
+    },
+    {
+      "command": "elsewise"
+    },
+    {
+      "command": "progress!!"
+    },
+    {
+      "error": "ERROR"
+    }
+  ]
+}
