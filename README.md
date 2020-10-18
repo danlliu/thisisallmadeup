@@ -90,7 +90,18 @@ when a figment is run, all instructions first get the values of the registers th
 
 ### running figments
 
-there are three stages to 
+there are four stages to running figments. the first stage is figment compilation. the program goes through the
+ program, and decides which instructions get run. this is where the `h`, `hh`, `hhh`, ... instructions come into play.
+ compilation starts from the upper left and goes across the first row of the Table of Nonexistence, then starts on the
+ second row, then on the third row, and so on. 
+ 
+the second stage is register fetch. in this stage, all instructions get the values needed from the registers, but do not
+modify the values of the registers at this point
+
+the third stage is execute. in this stage, all instructions compute their result and remember that result
+
+the last stage is writeback. in this stage, any instructions that need to write a result to a register do so, in
+ order from top to bottom, left to right.
 
 ### using instructions
 every valid program starts with the line `i'm Coding!`.
@@ -117,8 +128,8 @@ not all commands will alter a figment. as mentioned before, the commands `bruh` 
    but ok?` will jump to the corresponding `elsewise` if the reality value
    of 0
    (fake). if we run a `seems fake but ok?` instruction and we run into its corresponding `elsewise`, we jump to the
-    next `progress!!` instruction. the corresponding `elsewise` makes sure that nested `seems fake but ok
-    ?` statements will work. for example,
+    next `progress!!` instruction. the corresponding `elsewise` makes sure that nested 
+    `seems fake but ok?` statements will work. for example,
     
     what wait why where when how
     seems fake but ok? (1)
@@ -135,3 +146,12 @@ not all commands will alter a figment. as mentioned before, the commands `bruh` 
 the `(1)` and `(2)` denote which instructions are part of the same group 
 
 a comment is declared using the syntax `lol {comment}`.
+
+branches are declared by `how did we jump from {line-num} to {line-num}`. these are always unconditional branches and
+ all
+branches must be declared after the instructions. having a branch from a comment is allowed. branching from a `seems
+ fake but ok?` statement will override the behavior of `seems fake but ok?`. branching from a `elsewise` instruction
+  does the same as if the `elsewise` was at the new location, but still corresponding to the same `seems fake but ok?`.
+  when execution reaches a line which has a branch specified, the next instruction to be executed is the one
+   specified by the second entry of the branch instruction.
+branch instructions override previous branch instructions 

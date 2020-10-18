@@ -82,6 +82,8 @@ function compile_code() {
     correspond = Array(code.length);
     let conditionals = Array(0);
 
+    let branching = false;
+
     for (let line of code) {
         console.log(line);
         console.log(line_num);
@@ -93,6 +95,27 @@ function compile_code() {
             ++line_num;
             continue;
         }
+
+        if (branching) {
+            // has to be branch
+            if (line.match(/^how did we jump from [0-9]+ to [0-9]+/)) {
+                let jump_lines = line.match(/[0-9]+/);
+                correspond[parseInt(jump_lines[0])]["branch"] = parseInt(jump_lines[1]);
+            } else {
+                throw SyntaxError(`branches must come after all other instructions`);
+            }
+            ++line_num;
+            continue;
+        }
+
+        if (line.match(/^how did we jump from [0-9]+ to [0-9]+/)) {
+            let jump_lines = line.match(/[0-9]+/);
+            correspond[parseInt(jump_lines[0]) - 1]["branch"] = parseInt(jump_lines[1]) - 1;
+            ++line_num;
+            branching = true;
+            continue;
+        }
+
         if (line.match(/^lol/)) {
             ++line_num;
             continue;
@@ -190,12 +213,26 @@ let new_reality = false;
 let figment_result = false;
 
 function runFigment() {
+    // stage 0: figment compilation
 
+    // stage 1: register fetch
+
+    // stage 2: execute
+
+    // stage 3: writeback
 }
 
 function step() {
 
     let current_line = code[running_line];
+
+    if (correspond[current_line]["branch"] != null) {
+        current_line = correspond[current_line]["branch"];
+        loadFigment();
+        loadRegisters();
+        updateCode();
+        return;
+    }
 
     switch (current_line) {
         case "bruh":
