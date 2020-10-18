@@ -57,7 +57,7 @@ let instructions;
 
 $.getJSON("./commands.json", (json) => {instructions = json["commands"];});
 
-let code = null;
+let code = [];
 let correspond = Array(0);
 let registers = [0,0,0,0,0,0,0,0];
 let doubleregisters = [[0,0], [0,0]];
@@ -142,6 +142,21 @@ function compile_code() {
 }
 
 let edit_mode = true;
+let running_line = 0;
+let portal_location = [0,0];
+
+function updateCode() {
+    line_nums.empty();
+    let sz = code.length;
+    for (let i = 1; i <= sz; ++i) {
+        if (i !== running_line + 1) {
+            line_nums.append(`${i}<br/>`);
+        } else {
+            line_nums.append(`<span style="color: green; font-weight: bold">&gt;</span><br/>`);
+        }
+    }
+    line_nums.append(`<br>`);
+}
 
 function compile() {
     if (edit_mode) {
@@ -154,6 +169,7 @@ function compile() {
             run_button.removeAttribute("disabled");
             edit_mode = false;
             compile_button.innerHTML = "edit code";
+            updateCode();
         } catch (e) {
             errors.innerHTML = `<p style="color: red">error: ${e.message}</p>`;
         }
@@ -166,11 +182,16 @@ function compile() {
         step_button.toggleAttribute("disabled", true);
         next_figment_button.toggleAttribute("disabled", true);
         run_button.toggleAttribute("disabled", true);
+        codechange();
     }
 }
 
-let running_line = 0;
-let portal_location = [0,0];
+let new_reality = false;
+let figment_result = false;
+
+function runFigment() {
+
+}
 
 function step() {
 
@@ -178,12 +199,44 @@ function step() {
 
     switch (current_line) {
         case "bruh":
+            // run
+            runFigment();
+            new_reality = true;
+            break;
         case "b r u h":
+            // run & clear
+            runFigment();
+            new_reality = true;
+            break;
         case "i.e.":
+            // right
+            ++(portal_location[1]);
+            portal_location[1] %= 8;
+            break;
         case "e.g.":
+            // down
+            ++(portal_location[0]);
+            portal_location[0] %= 8;
+            break;
+        case "what wait why where when how":
+            // get reality value
+            if (new_reality) {
+                reality = figment_result;
+            }
+            break;
         case "seems fake but ok?":
+            // check and branch
+            if (reality === 0) { // fake
+                current_line = correspond[current_line]["elsewise"];
+            }
+            break;
         case "elsewise":
+            // branch to corresponding progress!!, seems fake but ok? will branch to instruction after elsewise
+            current_line = correspond[current_line];
+            break;
         case "progress!!":
+            // end else just continue as normal
+            break;
         default:
             if (current_line.match(/^lol/)) {
                 break;
@@ -191,7 +244,12 @@ function step() {
             current_figment[portal_location[0]][portal_location[1]] = current_line;
     }
 
+    if (new_reality && current_line !== "bruh" && current_line !== "b r u h") {
+        new_reality = false;
+    }
+
     ++running_line;
     loadFigment();
     loadRegisters();
+    updateCode();
 }

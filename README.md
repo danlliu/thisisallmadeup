@@ -69,7 +69,8 @@ the instructions that can be used inside figments are
 - `uGH...H`: channels the inner frustration of Nonexistence into the first register (sets the first register to
  negative the number of `H`s in the instruction)
 - `h, hh, hhh, ...`: warp locations created by the interaction of Reality and Nonexistence. each warp location allows
- program execution to jump forward to the nearest corresponding warp location. progam execution cannot jump back, as
+ figment compilation to jump forward to the nearest corresponding warp location if the two registers specified have
+  the same value. progam execution cannot jump back, as
   this can cause a break in the Nonexistence continuum, overloading Reality with things we just don't want to worry
    about
 - `joe who`, `your conscience`: copies the values of the two specified registers to the memory of `joe who` or `your
@@ -84,8 +85,15 @@ the instructions that can be used inside figments are
   integer between 0 and 1047
 - `>:(`: expresses anger, but does nothing (noop)
 
+when a figment is run, all instructions first get the values of the registers they need, and perform all operations
+ simultaneously. register values are not updated in between figment instructions.
+
+### running figments
+
+there are three stages to 
+
 ### using instructions
-Every valid program starts with the line `i'm Coding!`.
+every valid program starts with the line `i'm Coding!`.
 
 **loading figment instructions:**
 
@@ -104,7 +112,10 @@ by adding a command into the flow of Reality, it will go through the portal, add
 
 not all commands will alter a figment. as mentioned before, the commands `bruh` and `b r u h` will bring figments
  into Reality. the command `what wait why where when how` is used to get the reality value of a figment after it is
-  run. running the command `seems fake but ok?` will jump to the corresponding `elsewise` if the reality value of 0
+  run. this can only be done right after the figment runs, or the reality value will disappear into Nothingness. running the
+   command `seems fake
+   but ok?` will jump to the corresponding `elsewise` if the reality value
+   of 0
    (fake). if we run a `seems fake but ok?` instruction and we run into its corresponding `elsewise`, we jump to the
     next `progress!!` instruction. the corresponding `elsewise` makes sure that nested `seems fake but ok
     ?` statements will work. for example,
