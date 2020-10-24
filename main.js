@@ -21,19 +21,29 @@ function newFigment() {
 }
 
 let current_figment = newFigment();
+let portal_location = [0,0];
 
 function loadFigment() {
     for (let i of Array(8).keys()) {
         for (let j of Array(8).keys()) {
-            document.querySelector(`#tb${i}${j}`).innerHTML = current_figment[i][j];
+            let text = current_figment[i][j];
+            if (text.match(/^ugh+/)) {
+                text = `ugh(${text.length - 2})`;
+            } else if (text.match(/^uGH+/)) {
+                text = `uGH(${text.length - 2})`;
+            }
+            document.querySelector(`#tb${i}${j}`).innerHTML = text;
+            document.querySelector(`#tb${i}${j}`).style.fontWeight = "normal";
+            document.querySelector(`#tb${i}${j}`).style.color = "black";
         }
     }
+    document.querySelector(`#tb${portal_location[0]}${portal_location[1]}`).style.fontWeight = "bold";
+    document.querySelector(`#tb${portal_location[0]}${portal_location[1]}`).style.color = "blue";
 }
 
 loadFigment();
 
 function codechange() {
-    console.log('change');
     line_nums.empty();
     let sz = code_input.val().split('\n').length;
     for (let i = 1; i <= sz; ++i) {
@@ -62,17 +72,20 @@ let correspond = Array(0);
 let registers = [0,0,0,0,0,0,0,0];
 let doubleregisters = [[0,0], [0,0]];
 let reality = 0;
+let memory = Array(2001);
 
 function loadRegisters() {
     for (let i of registers.keys()) {
-        document.querySelector(`x${i}_val`).innerHTML = `${registers[i]}`;
+        document.querySelector(`#x${i}_val`).innerHTML = `${registers[i]}`;
     }
-    document.querySelector('joe-who_val1').innerHTML = `${doubleregisters[0][0]}`;
-    document.querySelector('joe-who_val2').innerHTML = `${doubleregisters[0][1]}`;
-    document.querySelector('yc_val1').innerHTML = `${doubleregisters[1][0]}`;
-    document.querySelector('yc_val2').innerHTML = `${doubleregisters[1][1]}`;
-    document.querySelector('reality_val').innerHTML = `${reality}`;
+    document.querySelector('#joe-who_val1').innerHTML = `${doubleregisters[0][0]}`;
+    document.querySelector('#joe-who_val2').innerHTML = `${doubleregisters[0][1]}`;
+    document.querySelector('#yc_val1').innerHTML = `${doubleregisters[1][0]}`;
+    document.querySelector('#yc_val2').innerHTML = `${doubleregisters[1][1]}`;
+    document.querySelector('#reality_val').innerHTML = `${reality}`;
 }
+
+const NUMS_REGEX = /[0-9]+/g;
 
 function compile_code() {
     code = code_input.val().split('\n');
@@ -80,13 +93,12 @@ function compile_code() {
     let line_num = 1;
 
     correspond = Array(code.length);
+    for (let i = 0; i < code.length; ++i) { correspond[i] = -1; }
     let conditionals = Array(0);
 
     let branching = false;
 
     for (let line of code) {
-        console.log(line);
-        console.log(line_num);
         line = line.trim();
         if (line_num === 1) {
             if (line !== "i'm Coding!") {
@@ -94,14 +106,19 @@ function compile_code() {
             }
             ++line_num;
             continue;
+        } else if (line === "i'm Coding!") {
+            throw SyntaxError(`"i'm Coding!" cannot be used past the first line`);
         }
 
         if (branching) {
             // has to be branch
             if (line.match(/^how did we jump from [0-9]+ to [0-9]+/)) {
-                let jump_lines = line.match(/[0-9]+/);
-                correspond[parseInt(jump_lines[0])]["branch"] = parseInt(jump_lines[1]);
+                let jump_lines = [...line.matchAll(NUMS_REGEX)];
+                correspond[parseInt(jump_lines[0][0]) - 1] = parseInt(jump_lines[1][0]) - 1;
             } else {
+                if (line.match(/^lol/)) {
+                    continue;
+                }
                 throw SyntaxError(`branches must come after all other instructions`);
             }
             ++line_num;
@@ -109,8 +126,8 @@ function compile_code() {
         }
 
         if (line.match(/^how did we jump from [0-9]+ to [0-9]+/)) {
-            let jump_lines = line.match(/[0-9]+/);
-            correspond[parseInt(jump_lines[0]) - 1]["branch"] = parseInt(jump_lines[1]) - 1;
+            let jump_lines = [...line.matchAll(NUMS_REGEX)];
+            correspond[parseInt(jump_lines[0][0]) - 1] = parseInt(jump_lines[1][0]) - 1;
             ++line_num;
             branching = true;
             continue;
@@ -137,6 +154,7 @@ function compile_code() {
             else if (instr.command === "seems fake but ok?") {
                 conditionals.push({"line_num": line_num - 1, "elsewise": false, "progress": false});
                 correspond[line_num - 1] = {};
+                break;
             }
             else if (instr.command === "elsewise") {
                 if (conditionals.length === 0) {
@@ -148,6 +166,7 @@ function compile_code() {
                 conditionals[conditionals.length - 1]["elsewise"] = true;
                 correspond[conditionals[conditionals.length - 1]["line_num"]]["elsewise"] = line_num - 1;
                 correspond[line_num - 1] = {};
+                break;
             } else if (instr.command === "progress") {
                 if (conditionals.length === 0) {
                     throw SyntaxError("can't have progress!! without seems fake but ok?");
@@ -158,6 +177,11 @@ function compile_code() {
                 correspond[correspond[conditionals[conditionals.length - 1]["line_num"]]["elsewise"]]["progress"] = line_num - 1;
                 correspond[conditionals[conditionals.length - 1]["line_num"]]["progress"] = line_num - 1;
                 conditionals.pop();
+                break;
+            } else {
+                if (line === instr.command) {
+                    break;
+                }
             }
         }
         ++line_num;
@@ -166,7 +190,6 @@ function compile_code() {
 
 let edit_mode = true;
 let running_line = 0;
-let portal_location = [0,0];
 
 function updateCode() {
     line_nums.empty();
@@ -179,6 +202,11 @@ function updateCode() {
         }
     }
     line_nums.append(`<br>`);
+    if (running_line >= code.length) {
+        step_button.toggleAttribute("disabled", true);
+        next_figment_button.toggleAttribute("disabled", true);
+        run_button.toggleAttribute("disabled", true);
+    }
 }
 
 function compile() {
@@ -198,6 +226,10 @@ function compile() {
         }
     } else {
         running_line = 0;
+        portal_location = [0,0];
+        current_figment = newFigment();
+        loadFigment();
+        loadRegisters();
         edit_mode = true;
         compile_button.innerHTML = "compile";
         errors.innerHTML = "";
@@ -213,20 +245,164 @@ let new_reality = false;
 let figment_result = false;
 
 function runFigment() {
+
+    alert('running figment');
+
     // stage 0: figment compilation
+
+    // load waypoints
+    let running_instructions = [];
+    let waypoints = {
+        h: [],
+        hh: [],
+        hhh: [],
+        hhhh: [],
+        hhhhh: []
+    };
+    let h_correspond = Array(64);
+    for (let i = 0; i < 64; ++i) {
+        h_correspond[i] = i;
+    }
+
+    for (let r = 0; r < 8; ++r) {
+        for (let c = 0; c < 8; ++c) {
+            if (current_figment[r][c].match(/^h+$/)) {
+                waypoints[current_figment[r][c]].push({r, c, corresponding: r * 8 + c});
+            }
+        }
+    }
+
+    for (let tag of ["h", "hh", "hhh", "hhhh", "hhhhh"]) {
+        for (let i = 0; i < waypoints[tag].length; ++i) {
+            let closest_idx = i;
+            let closest_dist = Number.POSITIVE_INFINITY;
+            for (let pt = i + 1; pt < waypoints[tag].length; ++pt) {
+                if (waypoints[tag][pt] == null) break;
+                let dist = Math.sqrt(Math.pow((waypoints[tag][i].r - waypoints[tag][pt].r), 2) + Math.pow((waypoints[tag][i].c - waypoints[tag][pt].c), 2));
+                if (dist < closest_dist) {
+                    closest_idx = pt;
+                    closest_dist = dist;
+                }
+            }
+            waypoints[tag][i]["corresponding"] = waypoints[tag][closest_idx].r * 8 + waypoints[tag][closest_idx].c;
+            h_correspond[waypoints[tag][i].r * 8 + waypoints[tag][i].c] = waypoints[tag][closest_idx].r * 8 + waypoints[tag][closest_idx].c;
+        }
+    }
+
+    let compile_idx = 0;
+    while (compile_idx < 64) {
+        if (current_figment[Math.floor(compile_idx / 8)][compile_idx % 8].match(/^h+$/)) {
+            compile_idx = h_correspond[compile_idx];
+        } else {
+            running_instructions.push({instruction: current_figment[Math.floor(compile_idx / 8)][compile_idx % 8], idx: compile_idx});
+            if (running_instructions[running_instructions.length - 1] === "i'm DONE" ||
+                running_instructions[running_instructions.length - 1] === "someone send help") {
+                break;
+            }
+        }
+        ++compile_idx;
+    }
 
     // stage 1: register fetch
 
-    // stage 2: execute
+    let r_values = Array(0);
+    for (let instruction of running_instructions) {
+        r_values.push({r1: Math.floor(instruction.idx / 8), r2: instruction.idx % 8});
+    }
 
+    for (let regValues of r_values) {
+        regValues["r1_val"] = registers[regValues["r1"]];
+        regValues["r2_val"] = registers[regValues["r2"]];
+    }
+
+    // stage 2: execute
     // stage 3: writeback
+
+    let r_idx = 0;
+
+    for (let instruction of running_instructions) {
+        let regValues = r_values[r_idx++];
+        switch (instruction["instruction"]) {
+            case "i'm DONE":
+                figment_result = 0; // fake
+                break;
+            case "someone send help":
+                figment_result = 1; // real
+                break;
+            case "i'm Learning":
+                registers[regValues["r1"]] = registers[regValues["r1_val"]] + 1;
+                registers[regValues["r2"]] = registers[regValues["r2_val"]] + 1;
+                break;
+            case "i'm Struggling":
+                registers[regValues["r1"]] = registers[regValues["r1_val"]] + 1;
+                registers[regValues["r2"]] = registers[regValues["r2_val"]] - 1;
+                break;
+            case "nO":
+                registers[regValues["r1"]] = 0;
+                registers[regValues["r2"]] = -registers[regValues["r2_val"]];
+                break;
+            case "joe who":
+                doubleregisters[0][0] = regValues["r1_val"];
+                doubleregisters[0][1] = regValues["r2_val"];
+                break;
+            case "your conscience":
+                doubleregisters[1][0] = regValues["r1_val"];
+                doubleregisters[1][1] = regValues["r2_val"];
+                break;
+            case "whos joe":
+                registers[regValues["r1"]] = doubleregisters[0][0];
+                registers[regValues["r2"]] = doubleregisters[0][1];
+                break;
+            case "whos conscience?":
+                registers[regValues["r1"]] = doubleregisters[1][0];
+                registers[regValues["r2"]] = doubleregisters[1][1];
+                break;
+            case "wait i need to remember this":
+                if (regValues["r2_val"] < 0 || regValues["r2_val"] >= 2001) {
+                    break;
+                }
+                memory[regValues["r2_val"]] = regValues["r1_val"];
+                break;
+            case "what have i said that's so usable":
+                if (regValues["r2_val"] < 0 || regValues["r2_val"] >= 2001) {
+                    registers[regValues["r1"]] = Math.floor(Math.random() * 1047);
+                }
+                registers[regValues["r1"]] = memory[regValues["r2_val"]];
+                break;
+            case ">:(":
+                break;
+            default:
+                if (instruction["instruction"].match(/^ugh+$/)) {
+                    registers[regValues["r1"]] = instruction["instruction"].length - 2;
+                } else if (instruction["instruction"].match(/^uGH+$/)) {
+                    registers[regValues["r1"]] = -(instruction["instruction"].length - 2);
+                }
+                break;
+        }
+    }
 }
 
 function step() {
 
+    if (correspond[running_line] !== -1) {
+        running_line = correspond[running_line];
+        loadFigment();
+        loadRegisters();
+        updateCode();
+        return;
+    }
+
     let current_line = code[running_line];
 
-    if (correspond[current_line]["branch"] != null) {
+    if (current_line === "i'm Coding!") {
+        ++running_line;
+        loadFigment();
+        loadRegisters();
+        updateCode();
+        return;
+    }
+
+    if (correspond[current_line] != null && correspond[current_line]["branch"] != null) {
         current_line = correspond[current_line]["branch"];
         loadFigment();
         loadRegisters();

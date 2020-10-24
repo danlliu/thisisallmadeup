@@ -57,11 +57,11 @@ the instructions that can be used inside figments are
 - `someone send help`: set the figment's reality value to 1 and remove the figment from Reality (end execution)
 - `i'm Learning`: two registers move towards the bliss of Nonexistence. adds one to the value of both registers
  specified by the Table of Nonexistence. if the instruction
- is along the diagonal of the Table, the value of that register is increased by 2
+ is along the diagonal of the Table, the value of that register is increased by 1
 - `i'm Struggling`: a struggle for power between two registers. adds one to the value of the first register specified
  and subtracts one from the value of the
  second register specified. if the instruction is along the diagonal of the Table, the value of that register is
-  unchanged
+  decreased by 1.
 - `nO`: warps the first register into Nonexistence (sets it to 0), and forces the second register to transcend
  Reality, changing its value into its additive inverse
 - `ugh...h`: channels the inner frustration of Reality into the first register (sets the first register to the number
@@ -70,7 +70,7 @@ the instructions that can be used inside figments are
  negative the number of `H`s in the instruction)
 - `h, hh, hhh, ...`: warp locations created by the interaction of Reality and Nonexistence. each warp location allows
  figment compilation to jump forward to the nearest corresponding warp location if the two registers specified have
-  the same value. progam execution cannot jump back, as
+  the same value. program execution cannot jump back, as
   this can cause a break in the Nonexistence continuum, overloading Reality with things we just don't want to worry
    about
 - `joe who`, `your conscience`: copies the values of the two specified registers to the memory of `joe who` or `your
@@ -79,7 +79,7 @@ the instructions that can be used inside figments are
 - `whos joe`, `whos conscience?`: takes the values from either `joe who` or `your conscience`, storing them back into
  the specified registers
 - `wait i need to remember this`: stores the value in the first register to a memory address defined by the second
- register. if the second register's value is negative, the value of the first register is discarded
+ register. if the second register's value is negative, the value of the first register is discarded. 
 - `what have i said that's so usable`: loads from the memory address corresponding to the value of the second
  register to the first register. if the second register has a negative value, the first register is set to a random
   integer between 0 and 1047
@@ -91,7 +91,9 @@ when a figment is run, all instructions first get the values of the registers th
 ### running figments
 
 there are four stages to running figments. the first stage is figment compilation. the program goes through the
- program, and decides which instructions get run. this is where the `h`, `hh`, `hhh`, ... instructions come into play.
+ program, and decides which instructions get run. this is where the `h`, `hh`, `hhh`, `hhhh`, and `hhhhh` instructions
+  come
+  into play.
  compilation starts from the upper left and goes across the first row of the Table of Nonexistence, then starts on the
  second row, then on the third row, and so on. 
  
