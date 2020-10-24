@@ -242,6 +242,12 @@ function compile() {
         running_line = 0;
         portal_location = [0,0];
         current_figment = newFigment();
+        registers = [0,0,0,0,0,0,0,0];
+        doubleregisters = [[0,0], [0,0]];
+        memory = Array(2001);
+        for (let i = 0; i < 2001; ++i) {
+            memory[i] = 0;
+        }
         loadFigment();
         loadRegisters();
         edit_mode = true;
