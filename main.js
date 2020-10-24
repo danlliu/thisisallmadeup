@@ -86,6 +86,7 @@ function loadRegisters() {
 }
 
 const NUMS_REGEX = /[0-9]+/g;
+let text_size = 0;
 
 function compile_code() {
     code = code_input.val().split('\n');
@@ -105,6 +106,7 @@ function compile_code() {
                 throw SyntaxError(`first line must be "i'm Coding!"`);
             }
             ++line_num;
+            ++text_size;
             continue;
         } else if (line === "i'm Coding!") {
             throw SyntaxError(`"i'm Coding!" cannot be used past the first line`);
@@ -132,6 +134,8 @@ function compile_code() {
             branching = true;
             continue;
         }
+
+        ++text_size;
 
         if (line.match(/^lol/)) {
             ++line_num;
@@ -202,7 +206,17 @@ function updateCode() {
         }
     }
     line_nums.append(`<br>`);
-    if (running_line >= code.length) {
+    if (running_line >= text_size) {
+        running_line = -1;
+        errors.innerHTML += `<p style="color: black; font-weight: bold">the code has Finished!</p><hr/>`;
+        line_nums.empty();
+        for (let i = 1; i <= sz; ++i) {
+            if (i !== running_line + 1) {
+                line_nums.append(`${i}<br/>`);
+            } else {
+                line_nums.append(`<span style="color: green; font-weight: bold">&gt;</span><br/>`);
+            }
+        }
         step_button.toggleAttribute("disabled", true);
         next_figment_button.toggleAttribute("disabled", true);
         run_button.toggleAttribute("disabled", true);
@@ -234,9 +248,9 @@ function compile() {
         compile_button.innerHTML = "compile";
         errors.innerHTML = "";
         document.querySelector('#code').removeAttribute("readonly");
-        step_button.toggleAttribute("disabled", true);
-        next_figment_button.toggleAttribute("disabled", true);
-        run_button.toggleAttribute("disabled", true);
+        step_button.removeAttribute("disabled");
+        next_figment_button.removeAttribute("disabled");
+        run_button.removeAttribute("disabled");
         codechange();
     }
 }
@@ -245,8 +259,6 @@ let new_reality = false;
 let figment_result = false;
 
 function runFigment() {
-
-    alert('running figment');
 
     // stage 0: figment compilation
 
@@ -419,6 +431,7 @@ function step() {
         case "b r u h":
             // run & clear
             runFigment();
+            current_figment = newFigment();
             new_reality = true;
             break;
         case "i.e.":
@@ -465,4 +478,57 @@ function step() {
     loadFigment();
     loadRegisters();
     updateCode();
+}
+
+function nextFigment() {
+    step_button.toggleAttribute("disabled", true);
+    next_figment_button.toggleAttribute("disabled", true);
+    run_button.toggleAttribute("disabled", true);
+    let interval = setInterval(() => {
+        if (running_line !== -1 && !(code[running_line] === "bruh" || code[running_line] === "b r u h")) {
+            step();
+        } else {
+            clearInterval(interval);
+            step_button.removeAttribute("disabled");
+            next_figment_button.removeAttribute("disabled");
+            run_button.removeAttribute("disabled");
+        }
+    }, 500);
+}
+
+let run_interval = null;
+
+function run() {
+    step_button.toggleAttribute("disabled", true);
+    next_figment_button.toggleAttribute("disabled", true);
+    run_interval = setInterval(() => {
+        if (running_line !== -1) {
+            step();
+        } else {
+            clearInterval(run_interval);
+            run_interval = null;
+            step_button.removeAttribute("disabled");
+            next_figment_button.removeAttribute("disabled");
+            run_button.innerHTML = "run";
+            run_button.classList.remove("btn-danger");
+            run_button.classList.add("btn-success");
+        }
+    }, 500);
+}
+
+function toggle_run() {
+    if (run_interval == null) {
+        run();
+        run_button.innerHTML = "pause";
+        run_button.classList.remove("btn-success");
+        run_button.classList.add("btn-danger");
+    } else {
+        clearInterval(run_interval);
+        step_button.removeAttribute("disabled");
+        next_figment_button.removeAttribute("disabled");
+        run_interval = null;
+        run_button.innerHTML = "run";
+        run_button.classList.remove("btn-danger");
+        run_button.classList.add("btn-success");
+    }
 }
