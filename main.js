@@ -159,12 +159,12 @@ function compile_code() {
                     break;
                 }
             }
-            else if (instr.command === "seems fake but ok?") {
+            else if (instr.command === "seems fake but ok?" && line === instr.command) {
                 conditionals.push({"line_num": line_num - 1, "elsewise": false, "progress": false});
                 correspond[line_num - 1] = {};
                 break;
             }
-            else if (instr.command === "elsewise") {
+            else if (instr.command === "elsewise" && line === instr.command) {
                 if (conditionals.length === 0) {
                     throw SyntaxError("can't have elsewise without seems fake but ok?");
                 }
@@ -175,15 +175,15 @@ function compile_code() {
                 correspond[conditionals[conditionals.length - 1]["line_num"]]["elsewise"] = line_num - 1;
                 correspond[line_num - 1] = {};
                 break;
-            } else if (instr.command === "progress") {
+            } else if (instr.command === "progress!!" && line === instr.command) {
                 if (conditionals.length === 0) {
                     throw SyntaxError("can't have progress!! without seems fake but ok?");
                 }
-                if (conditionals[conditionals.length - 1]["progress"]) {
+                if (conditionals[conditionals.length - 1]["progress!!"]) {
                     throw SyntaxError("seems fake but ok? cannot have two progress!!");
                 }
-                correspond[correspond[conditionals[conditionals.length - 1]["line_num"]]["elsewise"]]["progress"] = line_num - 1;
-                correspond[conditionals[conditionals.length - 1]["line_num"]]["progress"] = line_num - 1;
+                correspond[correspond[conditionals[conditionals.length - 1]["line_num"]]["elsewise"]]["progress!!"] = line_num - 1;
+                correspond[conditionals[conditionals.length - 1]["line_num"]]["progress!!"] = line_num - 1;
                 conditionals.pop();
                 break;
             } else {
@@ -311,7 +311,8 @@ function runFigment() {
 
     let compile_idx = 0;
     while (compile_idx < 64) {
-        if (current_figment[Math.floor(compile_idx / 8)][compile_idx % 8].match(/^h+$/)) {
+        if (current_figment[Math.floor(compile_idx / 8)][compile_idx % 8].match(/^h+$/) &&
+        registers[Math.floor(compile_idx / 8)] === registers[compile_idx % 8]) {
             compile_idx = h_correspond[compile_idx];
         } else {
             running_instructions.push({instruction: current_figment[Math.floor(compile_idx / 8)][compile_idx % 8], idx: compile_idx});
@@ -341,7 +342,11 @@ function runFigment() {
     let r_idx = 0;
 
     for (let instruction of running_instructions) {
+        console.log(registers);
+        console.log(`about to run`);
+        console.log(instruction);
         let regValues = r_values[r_idx++];
+        console.log(regValues);
         switch (instruction["instruction"]) {
             case "i'm DONE":
                 figment_result = 0; // fake
@@ -350,16 +355,18 @@ function runFigment() {
                 figment_result = 1; // real
                 break;
             case "i'm Learning":
-                registers[regValues["r1"]] = registers[regValues["r1_val"]] + 1;
-                registers[regValues["r2"]] = registers[regValues["r2_val"]] + 1;
+                registers[regValues["r1"]] = regValues["r1_val"] + 1;
+                registers[regValues["r2"]] = regValues["r2_val"] + 1;
                 break;
             case "i'm Struggling":
-                registers[regValues["r1"]] = registers[regValues["r1_val"]] + 1;
-                registers[regValues["r2"]] = registers[regValues["r2_val"]] - 1;
+                registers[regValues["r1"]] = regValues["r1_val"] + 1;
+                registers[regValues["r2"]] = regValues["r2_val"] - 1;
+                console.log(`after i'm Strugging`);
+                console.log(registers);
                 break;
             case "nO":
                 registers[regValues["r1"]] = 0;
-                registers[regValues["r2"]] = -registers[regValues["r2_val"]];
+                registers[regValues["r2"]] = -regValues["r2_val"];
                 break;
             case "joe who":
                 doubleregisters[0][0] = regValues["r1_val"];
@@ -411,7 +418,7 @@ function step() {
         return;
     }
 
-    if (correspond[running_line] !== -1) {
+    if (correspond[running_line] !== -1 && correspond[running_line]["elsewise"] == null) {
         running_line = correspond[running_line];
         loadFigment();
         loadRegisters();
@@ -468,12 +475,12 @@ function step() {
         case "seems fake but ok?":
             // check and branch
             if (reality === 0) { // fake
-                current_line = correspond[current_line]["elsewise"];
+                running_line = correspond[running_line]["elsewise"];
             }
             break;
         case "elsewise":
             // branch to corresponding progress!!, seems fake but ok? will branch to instruction after elsewise
-            current_line = correspond[current_line];
+            running_line = correspond[running_line]["progress!!"];
             break;
         case "progress!!":
             // end else just continue as normal
@@ -508,7 +515,7 @@ function nextFigment() {
             next_figment_button.removeAttribute("disabled");
             run_button.removeAttribute("disabled");
         }
-    }, 250);
+    }, 125);
 }
 
 let run_interval = null;
@@ -529,7 +536,7 @@ function run() {
             run_button.classList.remove("btn-danger");
             run_button.classList.add("btn-success");
         }
-    }, 250);
+    }, 125);
 }
 
 function toggle_run() {
