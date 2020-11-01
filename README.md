@@ -28,14 +28,18 @@ this is all made up
 >
 > Hi your conscience  
 > *–* elanor
+----
+> javascriptttttt
+> *-* abifox
+
 
 ### figments
 
 a figment is made up. figments don't exist until you need them to.
 
-figments exist in the Table of Nonexistence, a 8x8 grid for instructions.
-the Table of Nonexistence holds instructions, determining how they interact with the registers of Reality. the Table
- specifies two registers to 
+figments exist in the Table of Nonexistence, a 8x8 grid for instructions. the numbers on the left are register 1, and
+ the numbers on the top are register 2.
+the Table of Nonexistence holds instructions, determining how they interact with the registers of Reality.
 
 running a figment brings it into the world of Reality. this can be done using the instructions
 - `bruh` or
@@ -117,7 +121,7 @@ every figment has a portal to reality, allowing access to its contents without b
 by adding a command into the flow of Reality, it will go through the portal, adding itself to the Table of
  Nonexistence. however, the portal has its own weaknesses. if it is sent the command `i.e.`, it will abandon its spot
  , and move to the right one cell. if the portal is already on the right edge, it will appear to wrap around to the
-  left edge, although the true mechanism of this behavior is unknown. if it is sent the command `e.g.`, it will
+  left edge. if it is sent the command `e.g.`, it will
    abandon its spot, and move downwards one cell. again, if it is at the bottom edge, it will appear to wrap around
     to the top edge
 

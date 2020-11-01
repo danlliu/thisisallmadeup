@@ -6,6 +6,7 @@ let compile_button = document.querySelector('#compile-btn');
 let step_button = document.querySelector('#step-btn');
 let next_figment_button = document.querySelector('#next-fig-btn');
 let run_button = document.querySelector('#run-btn');
+let rewind_button = document.querySelector('#rewind-btn');
 
 let errors = document.querySelector('#errors');
 
@@ -31,6 +32,8 @@ function loadFigment() {
                 text = `ugh(${text.length - 2})`;
             } else if (text.match(/^uGH+/)) {
                 text = `uGH(${text.length - 2})`;
+            } else if (text === "someone send help") {
+                text = `someone<br/>send help`;
             }
             document.querySelector(`#tb${i}${j}`).innerHTML = text;
             document.querySelector(`#tb${i}${j}`).style.fontWeight = "normal";
@@ -89,6 +92,7 @@ const NUMS_REGEX = /[0-9]+/g;
 let text_size = 0;
 
 function compile_code() {
+    text_size = 0;
     code = code_input.val().split('\n');
     code.forEach((v, i, a) => (a[i] = v.trim()));
     let line_num = 1;
@@ -196,6 +200,14 @@ let edit_mode = true;
 let running_line = 0;
 
 function updateCode() {
+    if (running_line >= text_size || running_line === -1) {
+        console.log("end of updateCode");
+        running_line = -1;
+        errors.innerHTML += `<p style="color: black; font-weight: bold">the code has Finished!</p><hr/>`;
+        step_button.toggleAttribute("disabled", true);
+        next_figment_button.toggleAttribute("disabled", true);
+        run_button.toggleAttribute("disabled", true);
+    }
     line_nums.empty();
     let sz = code.length;
     for (let i = 1; i <= sz; ++i) {
@@ -206,21 +218,6 @@ function updateCode() {
         }
     }
     line_nums.append(`<br>`);
-    if (running_line >= text_size) {
-        running_line = -1;
-        errors.innerHTML += `<p style="color: black; font-weight: bold">the code has Finished!</p><hr/>`;
-        line_nums.empty();
-        for (let i = 1; i <= sz; ++i) {
-            if (i !== running_line + 1) {
-                line_nums.append(`${i}<br/>`);
-            } else {
-                line_nums.append(`<span style="color: green; font-weight: bold">&gt;</span><br/>`);
-            }
-        }
-        step_button.toggleAttribute("disabled", true);
-        next_figment_button.toggleAttribute("disabled", true);
-        run_button.toggleAttribute("disabled", true);
-    }
 }
 
 function compile() {
@@ -232,6 +229,7 @@ function compile() {
             step_button.removeAttribute("disabled");
             next_figment_button.removeAttribute("disabled");
             run_button.removeAttribute("disabled");
+            rewind_button.removeAttribute("disabled");
             edit_mode = false;
             compile_button.innerHTML = "edit code";
             updateCode();
@@ -248,21 +246,25 @@ function compile() {
         for (let i = 0; i < 2001; ++i) {
             memory[i] = 0;
         }
+        reality = 0;
+        figment_result = 0;
+        new_reality = false;
         loadFigment();
         loadRegisters();
         edit_mode = true;
         compile_button.innerHTML = "compile";
         errors.innerHTML = "";
         document.querySelector('#code').removeAttribute("readonly");
-        step_button.removeAttribute("disabled");
-        next_figment_button.removeAttribute("disabled");
-        run_button.removeAttribute("disabled");
+        step_button.disabled = true;
+        next_figment_button.disabled = true;
+        run_button.disabled = true;
+        rewind_button.disabled = true;
         codechange();
     }
 }
 
 let new_reality = false;
-let figment_result = false;
+let figment_result = 0;
 
 function runFigment() {
 
@@ -313,8 +315,8 @@ function runFigment() {
             compile_idx = h_correspond[compile_idx];
         } else {
             running_instructions.push({instruction: current_figment[Math.floor(compile_idx / 8)][compile_idx % 8], idx: compile_idx});
-            if (running_instructions[running_instructions.length - 1] === "i'm DONE" ||
-                running_instructions[running_instructions.length - 1] === "someone send help") {
+            if (running_instructions[running_instructions.length - 1].instruction === "i'm DONE" ||
+                running_instructions[running_instructions.length - 1].instruction === "someone send help") {
                 break;
             }
         }
@@ -401,6 +403,13 @@ function runFigment() {
 }
 
 function step() {
+
+    if (running_line >= text_size) {
+        loadFigment();
+        loadRegisters();
+        updateCode();
+        return;
+    }
 
     if (correspond[running_line] !== -1) {
         running_line = correspond[running_line];
@@ -499,7 +508,7 @@ function nextFigment() {
             next_figment_button.removeAttribute("disabled");
             run_button.removeAttribute("disabled");
         }
-    }, 500);
+    }, 250);
 }
 
 let run_interval = null;
@@ -507,19 +516,20 @@ let run_interval = null;
 function run() {
     step_button.toggleAttribute("disabled", true);
     next_figment_button.toggleAttribute("disabled", true);
+    rewind_button.toggleAttribute("disabled", true);
     run_interval = setInterval(() => {
         if (running_line !== -1) {
             step();
         } else {
             clearInterval(run_interval);
             run_interval = null;
-            step_button.removeAttribute("disabled");
-            next_figment_button.removeAttribute("disabled");
+            run_button.toggleAttribute("disabled", true);
+            rewind_button.removeAttribute("disabled");
             run_button.innerHTML = "run";
             run_button.classList.remove("btn-danger");
             run_button.classList.add("btn-success");
         }
-    }, 500);
+    }, 250);
 }
 
 function toggle_run() {
@@ -532,9 +542,15 @@ function toggle_run() {
         clearInterval(run_interval);
         step_button.removeAttribute("disabled");
         next_figment_button.removeAttribute("disabled");
+        rewind_button.removeAttribute("disabled");
         run_interval = null;
         run_button.innerHTML = "run";
         run_button.classList.remove("btn-danger");
         run_button.classList.add("btn-success");
     }
+}
+
+function rewind() {
+    compile();
+    compile();
 }
