@@ -418,7 +418,7 @@ function step() {
         return;
     }
 
-    if (correspond[running_line] !== -1 && correspond[running_line]["elsewise"] == null) {
+    if (correspond[running_line] !== -1 && correspond[running_line] != null && correspond[running_line]["elsewise"] == null) {
         running_line = correspond[running_line];
         loadFigment();
         loadRegisters();
