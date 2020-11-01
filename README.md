@@ -30,7 +30,7 @@ this is all made up
 > *–* elanor
 ----
 > javascriptttttt  
-> *-* abifox
+> *–* abifox
 
 
 ### figments
